@@ -1,7 +1,18 @@
-import Head from 'next/head'
-import '../styles/globals.css'
+import 'tailwindcss/tailwind.css';
 
-export default function MyApp({ Component, pageProps }) {
+import App from 'next/app.js';
+import Head from 'next/head';
+import React, { Fragment } from 'react';
+import { Provider } from 'react-redux';
+import { useStore } from 'redux/store.js';
+import { persistStore } from 'redux-persist';
+
+function MyApp({ Component, pageProps }) {
+  const store = useStore(pageProps.initialReduxState);
+  const persistor = persistStore(store, {}, function () {
+    persistor.persist();
+  });
+
   return (
     <>
       <Head>
@@ -31,7 +42,17 @@ export default function MyApp({ Component, pageProps }) {
         <link rel="apple-touch-icon" href="/apple-icon.png"></link>
         <meta name="theme-color" content="#317EFB" />
       </Head>
-      <Component {...pageProps} />
+      <Fragment>
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
+      </Fragment>
     </>
-  )
+  );
 }
+
+MyApp.getInitialProps = async appContext => ({
+  ...(await App.getInitialProps(appContext)),
+});
+
+export default MyApp;

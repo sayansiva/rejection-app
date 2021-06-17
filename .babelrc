@@ -1,0 +1,37 @@
+{
+  "env": {
+    "test": {
+      "plugins": [
+        [
+          "module-resolver",
+          {
+            "root": [
+              "."
+            ],
+            "alias": {
+              "components": "./src/components",
+              "config": "./src/config",
+              "features": "./src/features",
+              "hocs": "./src/hocs",
+              "hooks": "./src/hooks",
+              "pages": "./src/pages",
+              "redux": "./src/redux",
+              "styles": "./src/styles",
+              "tests": "./src/tests",
+              "utils": "./src/utils"
+            }
+          }
+        ]
+      ]
+    }
+  },
+  "presets": [
+    [
+      "next/babel",
+      {
+        "ramda": {}
+      }
+    ]
+  ],
+  "plugins": [["styled-components", { "ssr": true }]]
+}
