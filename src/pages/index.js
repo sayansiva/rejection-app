@@ -1,9 +1,4 @@
-import { Home } from 'features/home/home-page-component';
+import { Home } from 'features/home/home-container';
+import { withAuth } from 'hocs/with-auth';
 
-export default function Index() {
-  return (
-    <div>
-      <Home />
-    </div>
-  );
-}
+export default withAuth(Home);

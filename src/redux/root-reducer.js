@@ -1,14 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import {
+  reducer as questionReducer,
+  slice as questionSlice,
+} from 'features/question/question-reducer';
 
-const homeReducerConfig = {
-  key: 'homeSlice',
-  storage,
-  whitelist: ['count'],
-};
-
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  [questionSlice]: questionReducer,
+});
 
 const rootState = rootReducer(undefined, {});
 
