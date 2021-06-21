@@ -18,7 +18,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-function Home({ questions, acceptedPoints, rejectedPoints, totalPoints }) {
+function Home({
+  questions,
+  acceptedPoints,
+  rejectedPoints,
+  totalPoints,
+  onClickLogout,
+}) {
   return (
     <div className="relative min-h-screen bg-white">
       <Disclosure as="nav" className="bg-gray-50">
@@ -81,21 +87,19 @@ function Home({ questions, acceptedPoints, rejectedPoints, totalPoints }) {
                               static
                               className="origin-top-right absolute z-10 right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                             >
-                              {userNavigation.map(item => (
-                                <Menu.Item key={item.name}>
-                                  {({ active }) => (
-                                    <a
-                                      href={item.href}
-                                      className={classNames(
-                                        active ? 'bg-gray-100' : '',
-                                        'block py-2 px-4 text-sm text-gray-700',
-                                      )}
-                                    >
-                                      {item.name}
-                                    </a>
-                                  )}
-                                </Menu.Item>
-                              ))}
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    onClick={onClickLogout}
+                                    className={classNames(
+                                      active ? 'bg-gray-100' : '',
+                                      'block py-2 px-4 text-sm text-gray-700 w-full',
+                                    )}
+                                  >
+                                    Logout
+                                  </button>
+                                )}
+                              </Menu.Item>
                             </Menu.Items>
                           </Transition>
                         </>

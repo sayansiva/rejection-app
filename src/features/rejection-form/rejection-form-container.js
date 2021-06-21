@@ -1,4 +1,4 @@
-import { addQuestion } from 'features/question/question-reducer';
+import { createQuestion } from 'features/question/questions-saga';
 import { withFormik } from 'formik';
 import { transformProps } from 'hocs/transform-props';
 import { compose } from 'ramda';
@@ -17,10 +17,11 @@ const formikProps = {
   validationSchema: rejectionFormValidationSchema,
   handleSubmit: (
     { question, askee },
-    { props: { addQuestion }, resetForm },
+    { props: { createQuestion }, resetForm },
   ) => {
+    //TODO: refactor to a curry or something
     const status = document.activeElement.dataset.flag;
-    addQuestion({ question, askee, status });
+    createQuestion({ question, askee, status });
     resetForm();
   },
 };
@@ -53,7 +54,7 @@ const mapFormikBagToProps = ({
 });
 
 const mapDispatchToProps = {
-  addQuestion,
+  createQuestion,
 };
 export const RejectionForm = compose(
   connect(undefined, mapDispatchToProps),

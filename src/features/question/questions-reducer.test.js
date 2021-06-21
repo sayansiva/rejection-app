@@ -1,3 +1,4 @@
+import { logout } from 'features/user-authentication/user-authentication-reducer';
 import { rootReducer } from 'redux/root-reducer';
 import { describe } from 'riteway';
 
@@ -11,7 +12,7 @@ import {
   getRejectedPoints,
   getTotalPoints,
   reducer,
-} from './question-reducer';
+} from './questions-reducer';
 
 describe('question reducer', async assert => {
   assert({
@@ -78,6 +79,27 @@ describe('question reducer', async assert => {
       should: 'add the questions',
       actual: reducer(state, fetchedQuestions([third, fourth])),
       expected: [first, second, third, fourth],
+    });
+  }
+
+  assert({
+    given: 'no state and a logout action',
+    should: 'reset the state',
+    actual: reducer(undefined, logout()),
+    expected: [],
+  });
+
+  {
+    const first = createQuestion({ question: 'first', askee: 'askee' });
+    const second = createQuestion({ question: 'second', askee: 'askee' });
+
+    const state = reducer(undefined, fetchedQuestions([first, second]));
+
+    assert({
+      given: 'state and a logout action',
+      should: 'reset the state',
+      actual: reducer(state, logout()),
+      expected: [],
     });
   }
 

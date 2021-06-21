@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { filter, map, pipe, reduce } from 'ramda';
+import { logout } from 'features/user-authentication/user-authentication-reducer';
+import { filter, map, pipe, propOr, reduce } from 'ramda';
 import prop from 'ramda/src/prop';
 
 const slice = 'questions';
@@ -12,6 +13,9 @@ export const {
 } = createSlice({
   initialState,
   name: slice,
+  extraReducers: builder => {
+    builder.addCase(logout.type, () => initialState);
+  },
   reducers: {
     addQuestion: (state, { payload }) => [...state, payload],
     //TODO: fetch the questions from the backend and dispatch this action.
@@ -29,9 +33,9 @@ const addPointAttribute = ({ status, ...rest }) => ({
   status,
   ...rest,
 });
-const sumPointsReducer = (acc, { points }) => acc + points;
-
-const getPoints = pipe(map(addPointAttribute), reduce(sumPointsReducer, 0));
+const sumPointsReducer = (totalPoints, { status }) =>
+  totalPoints + propOr(0, status, pointsMap);
+const getPoints = reduce(sumPointsReducer, 0);
 
 const getQuestions = prop(slice);
 
@@ -40,9 +44,17 @@ const getQuestionsWithPoints = pipe(getQuestions, map(addPointAttribute));
 const isAccepted = ({ status }) => status === 'accepted';
 const isRejected = ({ status }) => status === 'rejected';
 
-const getTotalPoints = pipe(getQuestions, getPoints);
-const getAcceptedPoints = pipe(getQuestions, filter(isAccepted), getPoints);
-const getRejectedPoints = pipe(getQuestions, filter(isRejected), getPoints);
+const getTotalPoints = pipe(getQuestionsWithPoints, getPoints);
+const getAcceptedPoints = pipe(
+  getQuestionsWithPoints,
+  filter(isAccepted),
+  getPoints,
+);
+const getRejectedPoints = pipe(
+  getQuestionsWithPoints,
+  filter(isRejected),
+  getPoints,
+);
 
 export {
   getAcceptedPoints,

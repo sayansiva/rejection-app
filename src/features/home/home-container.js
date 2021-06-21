@@ -3,7 +3,8 @@ import {
   getQuestionsWithPoints,
   getRejectedPoints,
   getTotalPoints,
-} from 'features/question/question-reducer';
+} from 'features/question/questions-reducer';
+import { logout } from 'features/user-authentication/user-authentication-reducer';
 import { connect } from 'react-redux';
 
 import { Home as HomeComponent } from './home-component';
@@ -15,6 +16,8 @@ const mapStateToProps = state => ({
   questions: getQuestionsWithPoints(state),
 });
 
-const Home = connect(mapStateToProps)(HomeComponent);
+const Home = connect(mapStateToProps, { onClickLogout: () => logout() })(
+  HomeComponent,
+);
 
 export { Home };
