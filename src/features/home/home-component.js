@@ -11,9 +11,6 @@ const user = {
     'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 };
 
-//TODO: handle logout
-const userNavigation = [{ name: 'Sign out', href: '#' }];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -113,15 +110,15 @@ function Home({
             <Disclosure.Panel className="bg-gray-50 border-b border-gray-200 lg:hidden">
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="mt-3 px-2 space-y-1">
-                  {userNavigation.map(item => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="block rounded-md py-2 px-3 text-base font-medium text-gray-900 hover:bg-gray-100"
-                    >
-                      {item.name}
-                    </a>
-                  ))}
+                  <button
+                    onClick={onClickLogout}
+                    className={classNames(
+                      'bg-gray-100',
+                      'block py-2 px-4 text-sm text-gray-700 w-full',
+                    )}
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
             </Disclosure.Panel>

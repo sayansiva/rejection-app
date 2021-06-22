@@ -37,7 +37,7 @@ const createQuestionRequest = ({ userId, payload }) => {
 
 const loginRequest = token => {
   const instance = initializeClientApp();
-  return firebase(instance).auth().signInWithCustomToken(token);
+  return firebase.auth(instance).signInWithCustomToken(token);
 };
 
 const logoutRequest = () => {

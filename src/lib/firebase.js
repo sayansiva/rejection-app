@@ -1,4 +1,3 @@
-import firebase from 'firebase';
 import admin from 'firebase-admin';
 
 const clientCredentials = {
