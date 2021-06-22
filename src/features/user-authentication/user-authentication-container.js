@@ -5,7 +5,7 @@ import { compose } from 'ramda';
 import { connect } from 'react-redux';
 
 import { UserAuthentication as UserAuthenticationComponent } from './user-authentication-component';
-import { login } from './user-authentication-saga';
+import { getIsLoggingIn, login } from './user-authentication-reducer';
 import { loginValidationSchema } from './validation-schema';
 
 const apiKey = process.env.NEXT_PUBLIC_MAGIC_PUBLISHABLE_KEY || '';
@@ -18,7 +18,7 @@ const formikProps = {
   enableReinitialize: true,
   validationSchema: loginValidationSchema,
   handleSubmit: async ({ email }, { props: { login } }) => {
-    const magic = new Magic(apiKey);
+    const magic = new Magic(apiKey, { testMode: Boolean(window.Cypress) });
     const didToken = await magic.auth.loginWithMagicLink({ email });
     login({ didToken });
   },
@@ -33,9 +33,10 @@ const mapFormikBagToProps = ({
   setFieldValue,
   setFieldTouched,
   handleSubmit,
+  isLoggingIn,
   ...rest
 }) => ({
-  disabled: !isValid,
+  disabled: !isValid | isLoggingIn,
   email,
   emailError: touched.email ? errors.email : '',
   onChangeEmail: e => setFieldValue('email', e.target.value),
@@ -43,14 +44,18 @@ const mapFormikBagToProps = ({
   onBlurEmail: () => setFieldTouched('email', true),
   resetForm,
   onSubmit: handleSubmit,
+  isLoggingIn,
   ...rest,
 });
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  isLoggingIn: getIsLoggingIn(state),
+});
 
 const mapDispatchToProps = {
   login,
 };
+
 export const UserAuthentication = compose(
   connect(mapStateToProps, mapDispatchToProps),
   withFormik(formikProps),

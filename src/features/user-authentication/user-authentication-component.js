@@ -1,6 +1,7 @@
 import { LockClosedIcon } from '@heroicons/react/solid';
 
 function UserAuthentication({
+  isLoggingIn,
   onSubmit,
   disabled,
   email,
@@ -29,6 +30,7 @@ function UserAuthentication({
                 Email address
               </label>
               <input
+                aria-label="email"
                 value={email}
                 onChange={onChangeEmail}
                 onBlur={onBlurEmail}
@@ -53,6 +55,17 @@ function UserAuthentication({
               disabled={disabled}
               className="disabled:cursor-not-allowed group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
+              {isLoggingIn && (
+                <svg
+                  className="animate-spin h-5 w-5 mr-3"
+                  style={{
+                    border: '0.25rem solid',
+                    borderTop: '0.25rem solid grey',
+                    borderRadius: '50%',
+                  }}
+                  viewBox="0 0 24 24"
+                />
+              )}
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <LockClosedIcon
                   className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"

@@ -4,8 +4,8 @@ import { describe } from 'riteway';
 import { loginRequest, logoutRequest } from 'utils/firebase-requests';
 import request from 'utils/request';
 
-import { loggedIn } from './user-authentication-reducer';
-import { handleLogin, handleLogout, login } from './user-authentication-saga';
+import { loggedIn, login } from './user-authentication-reducer';
+import { handleLogin, handleLogout } from './user-authentication-saga';
 
 describe('handleLogin saga', async assert => {
   const didToken = 'did-token';

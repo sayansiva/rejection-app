@@ -7,10 +7,11 @@ const initialState = {
   token: '',
   userId: '',
   email: '',
+  isLoggingIn: false,
 };
 
 export const {
-  actions: { loggedIn, logout },
+  actions: { loggedIn, login, logout },
   reducer,
 } = createSlice({
   initialState,
@@ -22,6 +23,7 @@ export const {
       userId,
       email,
     }),
+    login: state => ({ ...state, isLoggingIn: true }),
     logout: () => initialState,
   },
 });
@@ -30,6 +32,8 @@ const getToken = path([slice, 'token']);
 const getUserId = path([slice, 'userId']);
 const getEmail = path([slice, 'email']);
 
+const getIsLoggingIn = path([slice, 'isLoggingIn']);
+
 const isUserLoggedIn = pipe(getToken, isEmpty, not);
 
-export { getEmail, getToken, getUserId, isUserLoggedIn, slice };
+export { getEmail, getIsLoggingIn, getToken, getUserId, isUserLoggedIn, slice };

@@ -3,18 +3,26 @@ import { describe } from 'riteway';
 
 import {
   getEmail,
+  getIsLoggingIn,
   getToken,
   getUserId,
   isUserLoggedIn,
   loggedIn,
+  login,
   logout,
   reducer,
 } from './user-authentication-reducer';
 
-const createState = ({ token = '', email = '', userId = '' } = {}) => ({
+const createState = ({
+  token = '',
+  email = '',
+  userId = '',
+  isLoggingIn = false,
+} = {}) => ({
   token,
   email,
   userId,
+  isLoggingIn,
 });
 
 describe('question reducer', async assert => {
@@ -25,6 +33,9 @@ describe('question reducer', async assert => {
     expected: createState(),
   });
 
+  /**
+   * Actions
+   */
   {
     const userId = 'user-id';
     const email = 'email';
@@ -73,6 +84,17 @@ describe('question reducer', async assert => {
       expected: createState(),
     });
   }
+
+  assert({
+    given: 'no state and a login action',
+    should: 'set isLoggingIn to true',
+    actual: reducer(undefined, login()),
+    expected: createState({ isLoggingIn: true }),
+  });
+
+  /**
+   * Selectors
+   */
 
   assert({
     given: 'no state and a get token selector',
@@ -148,4 +170,18 @@ describe('question reducer', async assert => {
       expected: true,
     });
   }
+
+  assert({
+    given: 'no state and a isLoggingIn selector',
+    should: 'return false',
+    actual: getIsLoggingIn(rootReducer(undefined, {})),
+    expected: false,
+  });
+
+  assert({
+    given: 'state and a isLoggingIn selector',
+    should: 'return true',
+    actual: getIsLoggingIn(rootReducer(undefined, login())),
+    expected: true,
+  });
 });
