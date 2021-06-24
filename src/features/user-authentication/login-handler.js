@@ -1,4 +1,3 @@
-//TODO: use async pipes
 import { initializeFirebase } from 'lib/firebase';
 import { setTokenCookie } from 'utils/cookies';
 import magic from 'utils/magic';
