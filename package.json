@@ -9,6 +9,8 @@
     "watch": "watch 'clear && run-s test' src"
   },
   "dependencies": {
+    "cookie": "^0.4.1",
+    "@hapi/iron": "^6.0.0",
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.1",
     "@magic-sdk/admin": "^1.3.0",

@@ -1,6 +1,8 @@
 //TODO: use async pipes
 import { initializeFirebase } from 'lib/firebase';
 import magic from 'utils/magic';
+import { encryptSession } from 'utils/sessions';
+import { setTokenCookie } from 'utils/cookies';
 
 const loginHandler = async (request, response) => {
   if (request.method === 'GET') {
@@ -13,6 +15,9 @@ const loginHandler = async (request, response) => {
       const session = await magic.users.getMetadataByToken(didToken);
 
       const { email } = session;
+      const token = await encryptSession(session);
+      setTokenCookie(response)(token);
+
       try {
         const user = (await admin.auth().getUserByEmail(email)).toJSON();
         const claim = magic.token.decode(didToken)[1];
