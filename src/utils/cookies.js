@@ -30,6 +30,7 @@ function removeTokenCookie(response) {
 
 function parseCookies(request) {
   if (request.cookies) {
+    console.log('header cookies', request.cookies);
     return request.cookies;
   }
 
