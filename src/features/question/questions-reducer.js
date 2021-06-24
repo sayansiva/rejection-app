@@ -18,7 +18,6 @@ export const {
   },
   reducers: {
     addQuestion: (state, { payload }) => [...state, payload],
-    //TODO: fetch the questions from the backend and dispatch this action.
     fetchedQuestions: (state, { payload }) => [...state, ...payload],
   },
 });

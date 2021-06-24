@@ -15,13 +15,7 @@ const questionsHandler = async (request, response) => {
 
   if (request.method === 'GET') {
     const admin = initializeFirebase();
-    const result = await admin
-      .firestore()
-      .collection('questions')
-      .get()
-      .then(questions => {
-        console.log('questions', questions.docs);
-      });
+    const result = await admin.firestore().collection('questions').get();
 
     return response.status(200).json(result);
   }

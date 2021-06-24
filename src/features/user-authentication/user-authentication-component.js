@@ -1,5 +1,6 @@
 import { LockClosedIcon } from '@heroicons/react/solid';
 
+//TODO: focus on question input again.
 function UserAuthentication({
   isLoggingIn,
   onSubmit,

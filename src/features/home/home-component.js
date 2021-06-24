@@ -3,14 +3,6 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { RejectionForm } from 'features/rejection-form/rejection-form-container';
 import { Fragment } from 'react';
 
-//TODO: load from backend
-const user = {
-  name: 'Whitney Francis',
-  email: 'whitneyfrancis@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -65,7 +57,9 @@ function Home({
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="rounded-full h-8 w-8"
-                                src={user.imageUrl}
+                                src={
+                                  'https://herrmans.de/wp-content/uploads/2019/01/765-default-avatar.png'
+                                }
                                 alt=""
                               />
                             </Menu.Button>

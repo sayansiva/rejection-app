@@ -1,4 +1,5 @@
 import 'tailwindcss/tailwind.css';
+import 'styles/globals.css';
 
 import App from 'next/app.js';
 import Head from 'next/head';

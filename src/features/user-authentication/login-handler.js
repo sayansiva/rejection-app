@@ -1,8 +1,8 @@
 //TODO: use async pipes
 import { initializeFirebase } from 'lib/firebase';
+import { setTokenCookie } from 'utils/cookies';
 import magic from 'utils/magic';
 import { encryptSession } from 'utils/sessions';
-import { setTokenCookie } from 'utils/cookies';
 
 const loginHandler = async (request, response) => {
   if (request.method === 'GET') {
@@ -15,24 +15,18 @@ const loginHandler = async (request, response) => {
       const session = await magic.users.getMetadataByToken(didToken);
 
       const { email } = session;
-      const token = await encryptSession(session);
-      setTokenCookie(response)(token);
 
       try {
         const user = (await admin.auth().getUserByEmail(email)).toJSON();
         const claim = magic.token.decode(didToken)[1];
-        console.log('user', user);
-        console.log('claim', claim);
-
         const { status, json } = await handleExistingUser(user, claim);
-        console.log('status', status);
-        console.log('json', json);
+        const token = await encryptSession(json);
+        setTokenCookie(response)(token);
         return response.status(status).json(json);
       } catch (e) {
-        console.log('no user', e);
         const { status, json } = await handleNewUser(email);
-        console.log('statuss', status);
-        console.log('json', json);
+        const token = await encryptSession(json);
+        setTokenCookie(response)(token);
         return response.status(status).json(json);
       }
     }
@@ -54,6 +48,7 @@ const handleExistingUser = async (user, claim) => {
   return {
     status: 200,
     json: {
+      email: user.email,
       uid: user.uid,
       token: firebaseToken,
     },
@@ -71,6 +66,7 @@ const handleNewUser = async email => {
   return {
     status: 200,
     json: {
+      email,
       uid: newUser.uid,
       token: firebaseToken,
     },

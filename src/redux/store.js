@@ -60,8 +60,6 @@ let store;
 
 function initStore(preloadedState = rootState) {
   const sagaMiddleware = createSagaMiddleware();
-  console.log('initStore');
-  console.log('middleware', middleware);
   const _store = configureStore({
     devTools: !isProd,
     preloadedState,
@@ -97,9 +95,6 @@ const initializeStore = preloadedState => {
 };
 
 function useStore(initialState) {
-  console.log('PERSIST', PERSIST);
-  console.log('REHYDRATE', REHYDRATE);
-
   const store = useMemo(() => initializeStore(initialState), [initialState]);
   return store;
 }
