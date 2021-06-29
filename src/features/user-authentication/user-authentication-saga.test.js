@@ -9,48 +9,51 @@ import { handleLogin, handleLogout } from './user-authentication-saga';
 
 describe('handleLogin saga', async assert => {
   const didToken = 'did-token';
+  // please call this firebaseToken
   const token = 'token';
 
   const userId = 'userId';
   const email = 'email@email.de';
 
+  // maybe call this loginWithBackend?
   const action = login({ didToken });
 
   const response = { user: { email, uid: userId } };
-  const gen = handleLogin(action);
+  // You call a generator and get an iterator back.
+  const iterator = handleLogin(action);
 
   assert({
     given: 'saga started',
     should: 'return a login request',
-    actual: gen.next().value,
+    actual: iterator.next().value,
     expected: call(request, { route: 'api/login', token: didToken }),
   });
 
   assert({
     given: 'a token',
     should: 'make a login request',
-    actual: gen.next({ token }).value,
+    actual: iterator.next({ token }).value,
     expected: call(loginRequest, token),
   });
 
   assert({
     given: 'a login request',
     should: 'dispatch a logged in request',
-    actual: gen.next(response).value,
+    actual: iterator.next(response).value,
     expected: put(loggedIn({ token, email, userId })),
   });
 
   assert({
     given: 'nothing',
     should: 'fetch the questions',
-    actual: gen.next().value,
+    actual: iterator.next().value,
     expected: call(handleFetchQuestions),
   });
 
   assert({
     given: 'nothing',
     should: 'be done',
-    actual: gen.next().done,
+    actual: iterator.next().done,
     expected: true,
   });
 });

@@ -1,7 +1,7 @@
 import { logout } from 'features/user-authentication/user-authentication-reducer';
-import { rootReducer } from 'redux/root-reducer';
 import { describe } from 'riteway';
 
+// the action creator IS a question factory - do we need this?
 import { createQuestion } from './question-factories';
 import {
   addQuestion,
@@ -12,7 +12,11 @@ import {
   getRejectedPoints,
   getTotalPoints,
   reducer,
+  slice,
 } from './questions-reducer';
+
+const withSlice = state => ({ [slice]: state });
+const initialState = reducer(undefined, {});
 
 describe('question reducer', async assert => {
   assert({
@@ -30,26 +34,48 @@ describe('question reducer', async assert => {
       question: 'some question',
       askee: 'Some askee',
     });
+    const state = reducer(initialState, addQuestion(question));
 
+    // Action creators and selectors are the public API for the reducer,
+    // and you should only be testing the public API.
     assert({
-      given: 'no state and an add question action',
+      given: 'initial state and an add question action',
       should: 'add the question',
-      actual: reducer(undefined, addQuestion(question)),
+      actual: getQuestions(withSlice(state)),
+      // Your unit tests should not know the state shape, so use selectors.
       expected: [question],
     });
   }
 
   {
-    const first = createQuestion({ question: 'first', askee: 'askee' });
-    const second = createQuestion({ question: 'second', askee: 'askee' });
-    const toAdd = createQuestion({ question: 'third', askee: 'askee' });
-    const state = [first, second];
+    const actions = [
+      addQuestion({ question: 'first', askee: 'askee' }),
+      addQuestion({ question: 'second', askee: 'askee' }),
+      addQuestion({ question: 'third', askee: 'askee' }),
+    ];
+    const state = withSlice(actions.reduce(reducer, initialState));
 
     assert({
       given: 'state and an add question action',
       should: 'add the question',
-      actual: reducer(state, addQuestion(toAdd)),
-      expected: [first, second, toAdd],
+      actual: getQuestions(state),
+      expected: actions.map(({ payload }) => payload),
+    });
+  }
+
+  {
+    const actions = [
+      addQuestion({ question: 'first', askee: 'askee' }),
+      addQuestion({ question: 'second', askee: 'askee' }),
+      addQuestion({ question: 'third', askee: 'askee' }),
+    ];
+    const state = withSlice(actions.reduce(reducer, initialState));
+
+    assert({
+      given: 'state and an add question action',
+      should: 'add the question',
+      actual: getQuestions(state),
+      expected: actions.map(({ payload }) => payload),
     });
   }
 
@@ -109,7 +135,7 @@ describe('question reducer', async assert => {
   assert({
     given: 'no state and a get questions selector',
     should: 'return an empty array',
-    actual: getQuestions(rootReducer(undefined, {})),
+    actual: getQuestions(withSlice(reducer(undefined, {}))),
     expected: [],
   });
 
@@ -119,7 +145,7 @@ describe('question reducer', async assert => {
 
     const questions = [first, second];
 
-    const state = rootReducer(undefined, fetchedQuestions(questions));
+    const state = withSlice(reducer(undefined, fetchedQuestions(questions)));
 
     assert({
       given: 'state and a get questions selector',
@@ -132,14 +158,16 @@ describe('question reducer', async assert => {
   assert({
     given: 'no state and a get questions with points selector',
     should: 'return an empty array',
-    actual: getQuestionsWithPoints(rootReducer(undefined, {})),
+    actual: getQuestionsWithPoints(withSlice(reducer(undefined, {}))),
     expected: [],
   });
 
   {
     const first = createQuestion({ status: 'rejected' });
     const second = createQuestion({ status: 'accepted' });
-    const state = rootReducer(undefined, fetchedQuestions([first, second]));
+    const state = withSlice(
+      reducer(undefined, fetchedQuestions([first, second])),
+    );
 
     assert({
       given: 'state and a get questions with points selector',
@@ -155,17 +183,17 @@ describe('question reducer', async assert => {
   assert({
     given: 'no state and a get total points selector',
     should: 'return the total points',
-    actual: getTotalPoints(rootReducer(undefined, {})),
+    actual: getTotalPoints(withSlice(reducer(undefined, {}))),
     expected: 0,
   });
 
   {
     const accepted = createQuestion();
     const rejected = createQuestion({ status: 'rejected' });
-    const state = rootReducer(
-      undefined,
-      fetchedQuestions([accepted, rejected]),
+    const state = withSlice(
+      reducer(undefined, fetchedQuestions([accepted, rejected])),
     );
+
     assert({
       given: 'state and a get total points selector',
       should: 'return the total points',
@@ -177,16 +205,15 @@ describe('question reducer', async assert => {
   assert({
     given: 'no state and a get accepted points selector',
     should: 'return the accepted points',
-    actual: getAcceptedPoints(rootReducer(undefined, {})),
+    actual: getAcceptedPoints(withSlice(reducer(undefined, {}))),
     expected: 0,
   });
 
   {
     const accepted = createQuestion();
     const rejected = createQuestion({ status: 'rejected' });
-    const state = rootReducer(
-      undefined,
-      fetchedQuestions([accepted, rejected]),
+    const state = withSlice(
+      reducer(undefined, fetchedQuestions([accepted, rejected])),
     );
 
     assert({
@@ -200,16 +227,15 @@ describe('question reducer', async assert => {
   assert({
     given: 'no state and a get rejected points selector',
     should: 'return the rejected points',
-    actual: getRejectedPoints(rootReducer(undefined, {})),
+    actual: getRejectedPoints(withSlice(reducer(undefined, {}))),
     expected: 0,
   });
 
   {
     const accepted = createQuestion();
     const rejected = createQuestion({ status: 'rejected' });
-    const state = rootReducer(
-      undefined,
-      fetchedQuestions([accepted, rejected]),
+    const state = withSlice(
+      reducer(undefined, fetchedQuestions([accepted, rejected])),
     );
 
     assert({

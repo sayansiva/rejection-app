@@ -9,6 +9,11 @@ import { finishAppLoading } from './app-loading-reducer.js';
 import { handleStartAppLoading } from './app-loading-saga.js';
 
 describe('handleStartAppLoading saga', async assert => {
+  // for each test you want your test to be isolated because they should
+  // be able to run in parallel, and in random order so that if you need to
+  // shorten the CI/CD run, you can do that by running your tests in parallel.
+  // It also makes it easier to re-arrange order of tests, delete invalid tests,
+  // etc...
   const gen = cloneableGenerator(handleStartAppLoading)();
   const user = { email: 'email@email.de', token: 'token', uid: 'userId' };
 
